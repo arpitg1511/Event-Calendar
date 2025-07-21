@@ -1,12 +1,6 @@
 import { isSameDay, parseISO, isValid, format } from 'date-fns'
 import { generateRecurringDates, parseDate } from './dateUtils'
 
-/**
- * Get events for a specific date (Vite optimized)
- * @param {Array} events - All events
- * @param {Date} date - Date to filter for
- * @returns {Array} Events for the given date
- */
 export const getEventsForDate = (events, date) => {
   if (!Array.isArray(events) || !isValid(date)) {
     return []
@@ -14,7 +8,6 @@ export const getEventsForDate = (events, date) => {
 
   return events.filter(event => {
     try {
-      // Handle recurring events
       if (event.recurring && event.recurrencePattern !== 'none') {
         const eventStartDate = parseDate(event.date)
         if (!isValid(eventStartDate)) return false
@@ -27,7 +20,6 @@ export const getEventsForDate = (events, date) => {
         return recurringDates.some(recurringDate => isSameDay(recurringDate, date))
       }
       
-      // Handle single events
       const eventDate = parseDate(event.date)
       return isValid(eventDate) && isSameDay(eventDate, date)
     } catch (error) {
@@ -37,12 +29,6 @@ export const getEventsForDate = (events, date) => {
   })
 }
 
-/**
- * Enhanced conflict checking for Vite development
- * @param {Object} newEvent - New event to check
- * @param {Array} existingEvents - Existing events
- * @returns {Array} Conflicting events
- */
 export const checkEventConflicts = (newEvent, existingEvents) => {
   if (!newEvent || !Array.isArray(existingEvents)) {
     return []
@@ -58,10 +44,8 @@ export const checkEventConflicts = (newEvent, existingEvents) => {
     
     const conflicts = existingEvents.filter(event => {
       try {
-        // Skip the same event (for editing)
         if (event.id === newEvent.id) return false
         
-        // Skip if different dates
         const eventDate = parseDate(event.date)
         const newEventDate = parseDate(newEvent.date)
         
@@ -73,7 +57,6 @@ export const checkEventConflicts = (newEvent, existingEvents) => {
         
         if (!isValid(existingStart) || !isValid(existingEnd)) return false
         
-        // Check for overlap
         return (newStart < existingEnd && newEnd > existingStart)
       } catch (error) {
         console.error('Error checking individual event conflict:', error)
@@ -88,55 +71,34 @@ export const checkEventConflicts = (newEvent, existingEvents) => {
   }
 }
 
-/**
- * Enhanced event colors with CSS custom properties support
- */
 export const eventColors = {
-  work: '#ef4444',      // red-500
-  personal: '#3b82f6',  // blue-500
-  health: '#10b981',    // emerald-500
-  social: '#f59e0b',    // amber-500
-  travel: '#8b5cf6',    // violet-500
-  other: '#6b7280',     // gray-500
-  // Vite-specific additions
-  meeting: '#06b6d4',   // cyan-500
-  deadline: '#dc2626',  // red-600
-  birthday: '#ec4899',  // pink-500
-  holiday: '#84cc16'    // lime-500
+  work: '#ef4444',
+  personal: '#3b82f6',
+  health: '#10b981',
+  social: '#f59e0b',
+  travel: '#8b5cf6',
+  other: '#6b7280',
+  meeting: '#06b6d4',
+  deadline: '#dc2626',
+  birthday: '#ec4899',
+  holiday: '#84cc16'
 }
 
-/**
- * Get event color by category with fallback
- * @param {string} category 
- * @returns {string} Hex color code
- */
 export const getEventColor = (category) => {
   return eventColors[category] || eventColors.other
 }
 
-/**
- * Get contrast text color for background (Vite utility)
- * @param {string} backgroundColor 
- * @returns {string} 'white' or 'black'
- */
 export const getContrastColor = (backgroundColor) => {
-  // Convert hex to RGB
   const hex = backgroundColor.replace('#', '')
   const r = parseInt(hex.substr(0, 2), 16)
   const g = parseInt(hex.substr(2, 2), 16)
   const b = parseInt(hex.substr(4, 2), 16)
   
-  // Calculate luminance
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
   
   return luminance > 0.5 ? '#000000' : '#ffffff'
 }
 
-/**
- * Sort events by start time with error handling
- * @param {Array} events 
- * @returns {Array}
- */
 export const sortEventsByTime = (events) => {
   if (!Array.isArray(events)) return []
   
@@ -152,11 +114,6 @@ export const sortEventsByTime = (events) => {
   })
 }
 
-/**
- * Validate event data structure (Vite development helper)
- * @param {Object} event 
- * @returns {boolean}
- */
 export const validateEvent = (event) => {
   if (!event || typeof event !== 'object') return false
   
@@ -164,10 +121,6 @@ export const validateEvent = (event) => {
   return required.every(field => event[field] && typeof event[field] === 'string')
 }
 
-/**
- * Generate sample events for development (Vite dev utility)
- * @returns {Array}
- */
 export const generateSampleEvents = () => {
   const today = new Date()
   const tomorrow = new Date(today)

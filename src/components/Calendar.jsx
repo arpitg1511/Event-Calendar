@@ -15,7 +15,6 @@ import DraggableEvent from './DraggableEvent'
 import '../styles/Calendar.css'
 
 const Calendar = () => {
-  // State management with Vite optimizations
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(null)
   const [events, setEvents] = useLocalStorage('vite-calendar-events', [])
@@ -24,14 +23,12 @@ const Calendar = () => {
   const [showEventList, setShowEventList] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Memoized calendar data for Vite performance
   const calendarData = useMemo(() => ({
     days: getCalendarDays(currentDate),
     monthYear: format(currentDate, 'MMMM yyyy'),
     weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   }), [currentDate])
 
-  // Navigation handlers with useCallback for Vite optimization
   const goToPreviousMonth = useCallback(() => {
     setCurrentDate(prev => subMonths(prev, 1))
   }, [])
@@ -46,7 +43,6 @@ const Calendar = () => {
     setSelectedDate(today)
   }, [])
 
-  // Event handlers
   const handleDateClick = useCallback((date) => {
     setSelectedDate(date)
     setShowEventList(true)
@@ -71,14 +67,12 @@ const Calendar = () => {
     
     try {
       if (editingEvent) {
-        // Update existing event
         setEvents(prevEvents => 
           prevEvents.map(event => 
             event.id === editingEvent.id ? { ...eventData, id: editingEvent.id } : event
           )
         )
       } else {
-        // Add new event with Vite-optimized ID generation
         const newEvent = {
           ...eventData,
           id: generateTimestampId()
@@ -96,7 +90,7 @@ const Calendar = () => {
     }
   }, [editingEvent, setEvents])
 
-  // Enhanced drag and drop handler for Vite
+
   const handleEventDrop = useCallback((eventId, newDate) => {
     const event = events.find(e => e.id === eventId)
     if (event) {
@@ -110,7 +104,7 @@ const Calendar = () => {
     }
   }, [events, setEvents])
 
-  // Development helper - load sample events (Vite dev mode only)
+
   const loadSampleEvents = useCallback(() => {
     if (import.meta.env.DEV) {
       const samples = generateSampleEvents()
@@ -118,7 +112,7 @@ const Calendar = () => {
     }
   }, [setEvents])
 
-  // Keyboard shortcuts (Vite enhancement)
+
   React.useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === 'n' && (e.ctrlKey || e.metaKey)) {
@@ -137,7 +131,6 @@ const Calendar = () => {
 
   return (
     <div className="calendar-container">
-      {/* Enhanced Calendar Header with Vite indicators */}
       <div className="calendar-header">
         <div className="navigation">
           <button 
@@ -185,9 +178,8 @@ const Calendar = () => {
         </div>
       </div>
 
-      {/* Calendar Grid */}
       <div className="calendar-grid">
-        {/* Week day headers */}
+
         <div className="week-header">
           {calendarData.weekDays.map(day => (
             <div key={day} className="week-day">
@@ -196,7 +188,6 @@ const Calendar = () => {
           ))}
         </div>
 
-        {/* Calendar days with Vite optimizations */}
         <div className="days-grid">
           {calendarData.days.map(date => {
             const dayEvents = getEventsForDate(events, date)
@@ -223,7 +214,6 @@ const Calendar = () => {
                   {format(date, 'd')}
                 </span>
                 
-                {/* Events for this day */}
                 <div className="day-events">
                   {dayEvents.slice(0, 3).map(event => (
                     <DraggableEvent
@@ -245,7 +235,6 @@ const Calendar = () => {
         </div>
       </div>
 
-      {/* Event Modal with loading state */}
       {showModal && (
         <EventModal
           event={editingEvent}
@@ -260,7 +249,6 @@ const Calendar = () => {
         />
       )}
 
-      {/* Event List Modal */}
       {showEventList && selectedDate && (
         <EventList
           date={selectedDate}

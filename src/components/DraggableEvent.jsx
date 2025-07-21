@@ -7,7 +7,6 @@ const ItemTypes = {
 }
 
 const DraggableEvent = ({ event, onEdit, onDrop }) => {
-  // Enhanced drag functionality with Vite optimizations
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.EVENT,
     item: { id: event.id, event },
@@ -22,11 +21,9 @@ const DraggableEvent = ({ event, onEdit, onDrop }) => {
     },
   }), [event.id, onDrop])
 
-  // Drop functionality for rescheduling
   const [, drop] = useDrop(() => ({
     accept: ItemTypes.EVENT,
     drop: (item, monitor) => {
-      // This will be handled by the calendar day drop target
       return { handled: true }
     },
   }))
@@ -75,7 +72,6 @@ const DraggableEvent = ({ event, onEdit, onDrop }) => {
   )
 }
 
-// Enhanced drop target wrapper for calendar days
 export const DroppableCalendarDay = ({ children, date }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.EVENT,
